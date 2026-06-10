@@ -77,7 +77,7 @@
 
 ## 🗂 Data Model — Star Schema
 
-![Data Model](screenshots/ModelView.png)
+![Data Model](Screenshots/ModelView.png)
 
 The model uses a **star schema** with 2 Fact tables and 5 Dimension tables, all relationships set in Power BI Model View.
 
@@ -117,25 +117,25 @@ All transformations were done inside **Power Query Editor** before loading to th
       │
       ▼
 ┌──────────────────────────────────────────────────────┐
-│               POWER QUERY EDITOR                      │
-│                                                       │
-│  1. Merge Queries                                     │
-│     • olist_orders ⋈ olist_customers → DimOrders     │
-│     • olist_order_items ⋈ olist_products             │
+│               POWER QUERY EDITOR                     │
+│                                                      │
+│  1. Merge Queries                                    │
+│     • olist_orders ⋈ olist_customers → DimOrders    |
+│     • olist_order_items ⋈ olist_products            │
 │       → FactOrderItems (with category info)          │
-│                                                       │
-│  2. Change Data Types                                 │
+│                                                      │
+│  2. Change Data Types                                │
 │     • Date/timestamp columns → DateTime              │
 │     • price, freight_value → Decimal                 │
 │     • zip_code_prefix → Text (keep leading zeros)    │
-│                                                       │
+│                                                      │
 │  3. Rename & Clean Columns                           │
 │     • Standardized column names across all tables    │
-│     • Removed null rows in key join columns           │
-│                                                       │
+│     • Removed null rows in key join columns          │
+│                                                      │
 │  4. Remove Duplicates                                │
 │     • order_id in DimOrders (for 1-side of relation) │
-│                                                       │
+│                                                      │
 │  5. Load 7 tables to Model                           │
 └──────────────────────────────────────────────────────┘
       │
@@ -158,7 +158,7 @@ All transformations were done inside **Power Query Editor** before loading to th
 
 ### Page 1 — Sales Overview
 
-![Sales Overview](screenshots/Page1.png)
+![Sales Overview](Screenshots/Page1.png)
 
 | Visual | Details |
 |--------|---------|
@@ -172,7 +172,7 @@ All transformations were done inside **Power Query Editor** before loading to th
 
 ### Page 2 — Geographic Distribution — Customers & Sellers
 
-![Geographic Analysis](screenshots/Page2.png)
+![Geographic Analysis](Screenshots/Page2.png)
 
 | Visual | Details |
 |--------|---------|
@@ -185,7 +185,7 @@ All transformations were done inside **Power Query Editor** before loading to th
 
 ### Page 3 — Payment Methods · Customer Satisfaction
 
-![Payments & Reviews](screenshots/Page3.png)
+![Payments & Reviews](Screenshots/Page3.png)
 
 | Visual | Details |
 |--------|---------|
