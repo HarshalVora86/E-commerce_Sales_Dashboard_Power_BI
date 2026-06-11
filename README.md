@@ -229,7 +229,7 @@ E-commerce_Sales_Dashboard_Power_BI/
 **Harshal Vora**
 B.E. Computer Engineering | Data Analytics Enthusiast
 
-[![GitHub](https://img.shields.io/badge/GitHub-HarshalVara86-181717?style=flat&logo=github)](https://github.com/HarshalVara86)
+[![GitHub](https://img.shields.io/badge/GitHub-HarshalVara86-181717?style=flat&logo=github)](https://github.com/HarshalVora86)
 
 ---
 
