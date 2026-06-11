@@ -227,9 +227,9 @@ E-commerce_Sales_Dashboard_Power_BI/
 ## 👤 Author
 
 **Harshal Vora**
-B.E. Computer Engineering | Data Analytics Enthusiast
+Data Analytics Enthusiast
 
-[![GitHub](https://img.shields.io/badge/GitHub-HarshalVara86-181717?style=flat&logo=github)](https://github.com/HarshalVora86)
+[![GitHub](https://img.shields.io/badge/GitHub-HarshalVora86-181717?style=flat&logo=github)](https://github.com/HarshalVora86)
 
 ---
 
