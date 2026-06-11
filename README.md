@@ -1,220 +1,240 @@
 <div align="center">
 
-# 🛒 Olist E-Commerce Analytics — Power BI Dashboard
+# 🛒 Olist E-Commerce Analytics Dashboard
+### Power BI | Brazilian E-Commerce | 99,441 Orders | 2016–2018
 
 [![Power BI](https://img.shields.io/badge/Power%20BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)](https://powerbi.microsoft.com/)
 [![DAX](https://img.shields.io/badge/DAX-0078D4?style=for-the-badge&logo=microsoft&logoColor=white)](https://learn.microsoft.com/en-us/dax/)
-[![Power Query](https://img.shields.io/badge/Power%20Query-217346?style=for-the-badge&logo=microsoft&logoColor=white)](https://learn.microsoft.com/en-us/power-query/)
-[![Status](https://img.shields.io/badge/Status-Completed-brightgreen?style=for-the-badge)](https://github.com/HarshalVara86/E-commerce_Sales_Dashboard_Power_BI)
-
-<br/>
-
-> **End-to-end Power BI project on the Brazilian Olist Marketplace dataset (Sep 2016 – Oct 2018) — ETL in Power Query, DAX-built DimDate, star schema data model, and 3-page interactive dashboard.**
-
-<br/>
-
-### 📺 Project Overview Video
-
-[![Watch Walkthrough](https://img.shields.io/badge/▶%20Watch%20Demo-Google%20Drive-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1rvyQFDeU9Y3usLty8RbA8mQXrAGEbi4o/view?usp=sharing)
+[![Power Query](https://img.shields.io/badge/Power%20Query-217346?style=for-the-badge&logo=microsoft-excel&logoColor=white)](https://learn.microsoft.com/en-us/power-query/)
+[![Dataset](https://img.shields.io/badge/Dataset-Olist%20Kaggle-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
 
 </div>
 
 ---
 
-## 📋 Table of Contents
-- [Key Metrics](#-key-metrics)
-- [Tech Stack](#️-tech-stack)
-- [Dataset](#-dataset)
-- [Data Model — Star Schema](#-data-model--star-schema)
-- [ETL Pipeline — Power Query](#-etl-pipeline--power-query)
-- [Dashboard Pages](#-dashboard-pages)
-- [How to Run](#-how-to-run)
+## 📽️ Demo
+
+> 📹 Full walkthrough video → [Watch E-commerce_dashboard.mp4](https://drive.google.com/file/d/1uSBIVaIbYiJ86_VbdcFw7TR6Ynwke9Tg/view?usp=sharing)
 
 ---
 
-## 💡 Key Metrics
+## 📌 Project Overview
+
+This end-to-end Power BI project analyzes **Olist** — Brazil's largest e-commerce marketplace — using **8 raw CSV datasets** sourced from Kaggle. The goal was to build a recruiter-ready, analyst-grade dashboard covering sales performance, geographic distribution, payment behaviour, and customer satisfaction.
+
+**Key figures at a glance:**
 
 | Metric | Value |
 |--------|-------|
 | Total Orders | 99,441 |
 | Total Revenue | $13.59M |
-| Avg Customer Rating | 4.09 |
 | Avg Order Value | $137.75 |
-| Top Category by Revenue | Health & Beauty — $1.26M |
-| Top Seller City | São Paulo — $2.70M |
-| Dominant Payment Type | Credit Card — 78.34% |
-
----
-
-## 🛠️ Tech Stack
-
-| Tool | Used For |
-|------|---------|
-| Power BI Desktop | Dashboard design & data modeling |
-| Power Query (M) | ETL — cleaning, merging, transforming raw CSVs |
-| DAX | DimDate calendar table, calculated columns & measures |
-
----
-
-## 📂 Dataset
-
-**Source:** [Olist Brazilian E-Commerce Public Dataset — Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)  
-**Period:** September 2016 – October 2018
-
-| File | Rows | Columns |
-|------|------|---------|
-| `olist_orders_dataset.csv` | 99,441 | order_id, customer_id, order_status, purchase_timestamp, approved_at, delivery dates |
-| `olist_order_items_dataset.csv` | 112,650 | order_id, order_item_id, product_id, seller_id, shipping_limit_date, price, freight_value |
-| `olist_customers_dataset.csv` | 99,441 | customer_id, customer_unique_id, zip_code_prefix, city, state |
-| `olist_products_dataset.csv` | 32,951 | product_id, category_name, name_length, description_length, photos_qty, weight_g, dimensions |
-| `olist_sellers_dataset.csv` | 3,095 | seller_id, zip_code_prefix, city, state |
-| `olist_order_payments_dataset.csv` | 103,886 | order_id, payment_sequential, payment_type, installments, payment_value |
-| `olist_order_reviews_dataset.csv` | 104,719 | review_id, order_id, review_score, comment_title, comment_message, creation_date |
-| `olist_geolocation_dataset.csv` | 1,000,163 | zip_code_prefix, lat, lng, city, state |
-| `product_category_name_translation.csv` | 70 | product_category_name (PT), product_category_name_english |
-
----
-
-## 🗂 Data Model — Star Schema
-
-![Data Model](Screenshots/ModelView.png)
-
-The model uses a **star schema** with 2 Fact tables and 5 Dimension tables, all relationships set in Power BI Model View.
-
-| Table | Type | Source |
-|-------|------|--------|
-| `FactOrderItems` | Fact | olist_order_items_dataset |
-| `FactPayments` | Fact | olist_order_payments_dataset |
-| `FactReviews` | Fact | olist_order_reviews_dataset |
-| `DimOrders` | Dimension | olist_orders_dataset |
-| `DimCustomers` | Dimension | olist_customers_dataset |
-| `DimProducts` | Dimension | olist_products_dataset |
-| `DimSellers` | Dimension | olist_sellers_dataset |
-| `DimDate` | Dimension | **Built via DAX** — not from CSV |
-
-> `DimDate` was created entirely using DAX `CALENDAR()` with added columns: Year, Quarter, Month_Num, Month_Name, Weekday. This table drives all time-based filtering and slicers across the dashboard.
-
-**Relationships configured:**
-
-```
-DimDate        ──(1:*)──  DimOrders      (Date → order_purchase_timestamp)
-DimOrders      ──(1:*)──  FactOrderItems (order_id)
-DimOrders      ──(1:1)──  FactPayments   (order_id)
-DimOrders      ──(1:*)──  FactReviews    (order_id)
-DimOrders      ──(*)──    DimCustomers   (customer_id)
-DimProducts    ──(1:*)──  FactOrderItems (product_id)
-DimSellers     ──(1:*)──  FactOrderItems (seller_id)
-```
-
----
-
-## ⚙️ ETL Pipeline — Power Query
-
-All transformations were done inside **Power Query Editor** before loading to the model.
-
-```
-9 Raw CSV Files
-      │
-      ▼
-┌──────────────────────────────────────────────────────┐
-│               POWER QUERY EDITOR                     │
-│                                                      │
-│  1. Merge Queries                                    │
-│     • olist_orders ⋈ olist_customers → DimOrders    |
-│     • olist_order_items ⋈ olist_products            │
-│       → FactOrderItems (with category info)          │
-│                                                      │
-│  2. Change Data Types                                │
-│     • Date/timestamp columns → DateTime              │
-│     • price, freight_value → Decimal                 │
-│     • zip_code_prefix → Text (keep leading zeros)    │
-│                                                      │
-│  3. Rename & Clean Columns                           │
-│     • Standardized column names across all tables    │
-│     • Removed null rows in key join columns          │
-│                                                      │
-│  4. Remove Duplicates                                │
-│     • order_id in DimOrders (for 1-side of relation) │
-│                                                      │
-│  5. Load 7 tables to Model                           │
-└──────────────────────────────────────────────────────┘
-      │
-      ▼
-┌──────────────────────────┐
-│  DAX — DimDate Creation  │
-│  CALENDAR() +            │
-│  Year, Quarter,          │
-│  Month_Num, Month_Name,  │
-│  Weekday columns         │
-└──────────────────────────┘
-      │
-      ▼
-  Star Schema → 3-Page Dashboard
-```
+| Avg Customer Rating | 4.09 / 5 |
+| Date Range | Jan 2016 – Dec 2018 |
 
 ---
 
 ## 📊 Dashboard Pages
 
 ### Page 1 — Sales Overview
-
 ![Sales Overview](Screenshots/Page1.png)
 
-| Visual | Details |
-|--------|---------|
-| KPI Cards | Total Orders · Avg Customer Rating · Avg Order Value · Total Revenue |
-| Line Chart | Monthly Order Volume 2016–2018 |
-| Bar Chart (horizontal) | Top 10 Product Categories by Revenue |
-| Slicers | Order Status · Year · Product Category |
-| Text Cards | About the Dataset · Key Findings |
+> KPI cards, monthly order trend (2016–2018), order distribution map across Brazilian states, and top 10 product categories by revenue. Includes slicers for Order Status, Year, and Product Category.
 
 ---
 
-### Page 2 — Geographic Distribution — Customers & Sellers
-
+### Page 2 — Geographic Distribution
 ![Geographic Analysis](Screenshots/Page2.png)
 
-| Visual | Details |
-|--------|---------|
-| Bing Map | Orders by Customer State (bubble map) |
-| Bar Chart | Top 10 Seller Cities by Revenue |
-| Bar Chart | Revenue by Seller State (all 27 states) |
-| Slicer | Select Year |
+> Customer order concentration by state on an interactive map, top 10 seller cities by revenue, and revenue breakdown by seller state. SP (São Paulo) dominates both customer demand and seller supply.
 
 ---
 
-### Page 3 — Payment Methods · Customer Satisfaction
-
+### Page 3 — Payments & Customer Satisfaction
 ![Payments & Reviews](Screenshots/Page3.png)
 
-| Visual | Details |
-|--------|---------|
-| Matrix Table | Payment Value by Type × Year (2016 · 2017 · 2018 · Total) |
-| Donut Chart | Payment Type share — Credit Card 78.34%, Boleto 17.92%, Voucher 2.37%, Debit Card |
-| Horizontal Bar Chart | Avg Review Score by Product Category (44 categories) |
-| Slicer | Select Year |
+> Payment type mix (credit card = 78.34%), payment value by type and year matrix, and average review score ranked across all product categories.
 
 ---
 
-## ▶️ How to Run
+## 🗂️ Dataset
 
-1. Clone the repo
-   ```bash
-   git clone https://github.com/HarshalVara86/E-commerce_Sales_Dashboard_Power_BI.git
-   ```
-2. Open `E-commerce_dataset.pbix` in [Power BI Desktop](https://powerbi.microsoft.com/desktop/)
-3. If data source paths break, go to `Transform Data → Data Source Settings` and point to your local `/dataset/` folder
-4. Click **Refresh** and explore the 3-page dashboard
+**Source:** [Olist Brazilian E-Commerce — Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
+
+| File | Rows | Description |
+|------|------|-------------|
+| `olist_orders_dataset.csv` | 99,441 | Order master — status, timestamps |
+| `olist_order_items_dataset.csv` | 112,650 | Line items — price, freight, seller |
+| `olist_order_payments_dataset.csv` | 103,886 | Payment type, value, installments |
+| `olist_order_reviews_dataset.csv` | 104,719 | Review scores and comments |
+| `olist_customers_dataset.csv` | 99,441 | Customer city, state, zip |
+| `olist_products_dataset.csv` | 32,951 | Product category, dimensions, weight |
+| `olist_sellers_dataset.csv` | 3,095 | Seller city and state |
+| `product_category_name_translation.csv` | 71 | Portuguese → English category names |
+
+---
+
+## 🔄 Power Query — Applied Steps per Table
+
+### DimProducts
+| Step | Detail |
+|------|--------|
+| Source | Loaded `olist_products_dataset.csv` |
+| Promoted Headers | First row set as column headers |
+| Changed Type | Set column data types |
+| Merged Queries | Merged with `CategoryTranslation` on `product_category_name` |
+| Expanded CategoryTranslation | Expanded merged table to bring in `product_category_name_english` |
+| Renamed Columns | Renamed `product_category_name_english` → `Product_Category_EN` |
+
+### CategoryTranslation
+| Step | Detail |
+|------|--------|
+| Source | Loaded `product_category_name_translation.csv` |
+| Changed Type | Set column data types |
+| Promoted Headers | First row set as column headers |
+| Changed Type1 | Re-applied types after header promotion |
+
+### DimOrders
+| Step | Detail |
+|------|--------|
+| Source | Loaded `olist_orders_dataset.csv` |
+| Promoted Headers | First row set as column headers |
+| Changed Type | Set column data types |
+| Changed Type1 | Re-applied types for remaining columns |
+| Extracted Date | Extracted date portion from timestamp columns |
+
+### DimDate *(built in Power Query, not from CSV)*
+| Step | Detail |
+|------|--------|
+| StartDate / EndDate / Duration / Dates / Table | Generated a date range list and converted to table |
+| ChangedType | Set `Date` column type |
+| AddYear / AddQuarter / AddMonth / AddMonthName / AddWeekday / AddYearQuarter | Added individual calendar columns |
+| Renamed Columns | Standardised column names |
+| Removed Columns | Removed auto-generated `Date_hierarchy` column |
+
+### All Other Tables *(FactOrderItems, DimCustomers, DimGeolocation, FactPayments, FactReviews, DimSellers)*
+| Step | Detail |
+|------|--------|
+| Source | Loaded respective CSV file |
+| Changed Type | Set column data types |
+
+---
+
+## 🧮 DAX — DimDate Table
+
+`DimDate` was built entirely in DAX (not from a CSV), enabling proper time intelligence across all date fields.
+
+```dax
+DimDate = 
+ADDCOLUMNS(
+    CALENDAR(DATE(2016, 1, 1), DATE(2018, 12, 31)),
+    "Year",       YEAR([Date]),
+    "Month_Num",  MONTH([Date]),
+    "Month_Name", FORMAT([Date], "MMMM"),
+    "Quarter",    "Q" & QUARTER([Date]),
+    "Weekday",    FORMAT([Date], "DDDD")
+)
+```
+
+This table connects to `DimOrders[order_purchase_timestamp]` enabling Year/Quarter/Month slicers across all pages.
+
+---
+
+## 🗃️ Data Model (Star Schema)
+
+![Model View](Screenshots/ModelView.png)
+
+### Relationships
+
+| From Table | Key | → To Table | Key | Cardinality |
+|------------|-----|-----------|-----|-------------|
+| `DimOrders` | `order_id` | `FactOrderItems` | `order_id` | 1 : * |
+| `DimOrders` | `order_id` | `FactPayments` | `order_id` | 1 : * |
+| `DimOrders` | `order_id` | `FactReviews` | `order_id` | 1 : * |
+| `DimOrders` | `customer_id` | `DimCustomers` | `customer_id` | * : 1 |
+| `FactOrderItems` | `product_id` | `DimProducts` | `product_id` | * : 1 |
+| `FactOrderItems` | `seller_id` | `DimSellers` | `seller_id` | * : 1 |
+| `DimDate` | `Date` | `DimOrders` | `order_purchase_timestamp` | 1 : * |
+
+**Schema type:** Star Schema with 3 fact tables (`FactOrderItems`, `FactPayments`, `FactReviews`) and 4 dimension tables (`DimOrders`, `DimCustomers`, `DimProducts`, `DimSellers`, `DimDate`).
+
+
+
+---
+
+## 🗺️ Key Insights
+
+- **São Paulo dominates:** SP accounts for ~42% of all orders and ~$10.3M of seller revenue — significant geographic concentration risk.
+- **Credit card is king:** 78.34% of total payment value flows through credit cards; boleto (cash voucher) is second at 17.92%.
+- **Peak demand:** Order volume peaks in **November–December** (Black Friday / holiday season), with July showing a sharp mid-year dip.
+- **Top category:** `health_beauty` leads revenue at $1.26M, outpacing `watches_gifts` ($1.21M) and `bed_bath_table` ($1.04M).
+- **Niche categories score highest:** `cds_dvds_musicals` (4.67) and `fashion_roupa_infanto_juvenil` (4.50) have the highest avg review scores despite lower sales volume.
+
+---
+
+## 🛠️ Tools & Skills Used
+
+| Tool | Usage |
+|------|-------|
+| **Power BI Desktop** | Report authoring, visuals, slicers |
+| **Power Query (M)** | ETL — data cleaning, merges, type casting |
+| **DAX** | Calculated table (DimDate), KPI measures |
+| **Bing Maps visual** | Geographic order and revenue distribution |
+| **Matrix visual** | Payment value by type × year cross-tab |
+
+---
+
+## 📁 Repository Structure
+
+```
+E-commerce_Sales_Dashboard_Power_BI/
+│
+├── E-commerce_dataset.pbix          # Power BI report file
+│
+├── data/                            # Raw source CSVs
+│   ├── olist_orders_dataset.csv
+│   ├── olist_order_items_dataset.csv
+│   ├── olist_order_payments_dataset.csv
+│   ├── olist_order_reviews_dataset.csv
+│   ├── olist_customers_dataset.csv
+│   ├── olist_products_dataset.csv
+│   ├── olist_sellers_dataset.csv
+│   └── product_category_name_translation.csv
+│
+├── screenshots/
+│   ├── Page1.png                    # Sales Overview
+│   ├── Page2.png                    # Geographic Analysis
+│   ├── Page3.png                    # Payments & Reviews
+│   └── ModelView.png                # Data model diagram
+│
+└── README.md
+```
+
+---
+
+## 🚀 How to Run
+
+1. Clone this repository
+2. Place all CSV files from `/data` in the same folder
+3. Open `E-commerce_dataset.pbix` in **Power BI Desktop** (free)
+4. If prompted, update the data source path to your local `/data` folder
+5. Click **Refresh** — all 8 tables load automatically
+
+> **Requirement:** Power BI Desktop (free) — [Download here](https://powerbi.microsoft.com/desktop/)
+
+---
+
+## 👤 Author
+
+**Harshal Vora**
+B.E. Computer Engineering | Data Analytics Enthusiast
+
+[![GitHub](https://img.shields.io/badge/GitHub-HarshalVara86-181717?style=flat&logo=github)](https://github.com/HarshalVara86)
 
 ---
 
 <div align="center">
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/harshal-vora)
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/HarshalVara86)
-
-*Built by **Harshal Vora** · Data Analytics Portfolio*
-
-⭐ Star this repo if you found it useful!
+*If this project was useful, consider giving it a ⭐*
 
 </div>
